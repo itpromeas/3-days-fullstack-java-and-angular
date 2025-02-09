@@ -15,8 +15,8 @@ public class CategoryService implements Category {
 
     private final CategoryRepository categoryRepository;
 
-    public CategoryService(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
+    public CategoryService(CategoryRepository categoryRepo) {
+        this.categoryRepository = categoryRepo;
     }
 
     @Override

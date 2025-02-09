@@ -16,7 +16,7 @@ public interface Category {
 
     /***
      * get a category by id
-     * @param id: an integer representing a cagory id
+     * @param id: an integer representing a category id
      * @return a category
      */
     CategoryResponse getCategoryById(Long id);

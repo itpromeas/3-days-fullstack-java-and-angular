@@ -34,7 +34,7 @@ public class CategoryController {
     public ResponseEntity<CategoryResponse> create(@RequestBody CategoryDTO categoryDTO)  {
         CategoryResponse response = categoryService.createCategory(categoryDTO);
         if(response.getCategory() == null){
-            new ResponseEntity<>(response, HttpStatus.NOT_ACCEPTABLE);
+            new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
