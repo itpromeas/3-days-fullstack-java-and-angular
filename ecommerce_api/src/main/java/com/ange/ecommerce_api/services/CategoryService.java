@@ -1,10 +1,13 @@
 package com.ange.ecommerce_api.services;
 
 import com.ange.ecommerce_api.daos.CategoryRepository;
-import com.ange.ecommerce_api.dtos.CategoryDTO;
+import com.ange.ecommerce_api.dtos.CategoryRequestDTO;
+import com.ange.ecommerce_api.dtos.CategoryRespDTO;
 import com.ange.ecommerce_api.dtos.CategoryResponse;
+import com.ange.ecommerce_api.dtos.MyMapperDTO;
 import com.ange.ecommerce_api.interfaces.Category;
 import com.ange.ecommerce_api.models.CategoryModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,14 +17,16 @@ import java.util.Optional;
 public class CategoryService implements Category {
 
     private final CategoryRepository categoryRepository;
+    @Autowired
+    private MyMapperDTO myMapper;
 
     public CategoryService(CategoryRepository categoryRepo) {
         this.categoryRepository = categoryRepo;
     }
 
     @Override
-    public List<CategoryModel> getAllCategory() {
-        return categoryRepository.findAll();
+    public List<CategoryRespDTO> getAllCategory() {
+        return myMapper.categoriesListToDTO(categoryRepository.findAll());
     }
 
     @Override
@@ -29,7 +34,7 @@ public class CategoryService implements Category {
         CategoryResponse response = new CategoryResponse();
         Optional<CategoryModel> category = categoryRepository.findById(id);
         if(category.isPresent()){
-            response.setCategory(category.get());
+            response.setCategory(myMapper.categoryToDto(category.get()));
         }else{
             response.setErrorMessage("There is no category with id "+id);
         }
@@ -37,7 +42,7 @@ public class CategoryService implements Category {
     }
 
     @Override
-    public CategoryResponse createCategory(CategoryDTO categoryDTO) {
+    public CategoryResponse createCategory(CategoryRequestDTO categoryDTO) {
         String categoryName = categoryDTO.getName();
         CategoryResponse response = new CategoryResponse();
 
@@ -58,7 +63,7 @@ public class CategoryService implements Category {
         category.setDescription(categoryDTO.getDescription());
 
         // save it in db
-        response.setCategory(categoryRepository.save(category));
+        response.setCategory(myMapper.categoryToDto(categoryRepository.save(category)));
         return response;
     }
 
@@ -85,7 +90,7 @@ public class CategoryService implements Category {
                 newCategory.setDescription(categoryModel.getDescription());
 
                 // save it in db
-                response.setCategory(categoryRepository.save(newCategory));
+                response.setCategory(myMapper.categoryToDto(categoryRepository.save(newCategory)));
                 return response;
             }
             response.setErrorMessage("There is another category with name "+categoryModel.getName());

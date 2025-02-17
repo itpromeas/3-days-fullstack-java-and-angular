@@ -1,19 +1,30 @@
 package com.ange.ecommerce_api.dtos;
 
-import com.ange.ecommerce_api.models.ProductModel;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
 public class ProductResponse {
 
-    ProductModel product;
+    private ProductRequestDTO product;
 
-    String errorMessage;
+    private String errorMessage;
 
     public ProductResponse() {}
     public ProductResponse(String error) {
         errorMessage = error;
+    }
+
+    public ProductRequestDTO getProduct() {
+        return product;
+    }
+
+    public void setProduct(ProductRequestDTO product) {
+        this.product = product;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 }

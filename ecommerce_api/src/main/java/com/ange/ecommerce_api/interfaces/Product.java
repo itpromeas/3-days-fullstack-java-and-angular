@@ -1,10 +1,8 @@
 package com.ange.ecommerce_api.interfaces;
 
-import com.ange.ecommerce_api.dtos.CategoryDTO;
-import com.ange.ecommerce_api.dtos.ProductDTO;
+import com.ange.ecommerce_api.dtos.ProductCreateDTO;
+import com.ange.ecommerce_api.dtos.ProductRequestDTO;
 import com.ange.ecommerce_api.dtos.ProductResponse;
-import com.ange.ecommerce_api.models.CategoryModel;
-import com.ange.ecommerce_api.models.ProductModel;
 
 import java.util.List;
 
@@ -13,7 +11,7 @@ public interface Product {
      * get all products
      * @return a list of products
      */
-    List<ProductModel> getAllProducts();
+    List<ProductRequestDTO> getAllProducts();
 
     /***
      * get a product by id
@@ -26,7 +24,7 @@ public interface Product {
      * create a product
      * @param productDTO: product params
      */
-    ProductResponse createProduct(ProductDTO productDTO);
+    ProductResponse createProduct(ProductCreateDTO productDTO);
 
     /***
      * update a given product
@@ -34,7 +32,7 @@ public interface Product {
      * @param productModel: product model
      * @return a product
      */
-    ProductResponse updateProduct(Long id, ProductModel productModel);
+    ProductResponse updateProduct(Long id, ProductCreateDTO productModel);
 
     /***
      * delete a product

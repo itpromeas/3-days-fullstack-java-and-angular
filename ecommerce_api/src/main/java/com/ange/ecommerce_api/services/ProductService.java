@@ -1,13 +1,11 @@
 package com.ange.ecommerce_api.services;
 
 import com.ange.ecommerce_api.daos.ProductRepository;
-import com.ange.ecommerce_api.dtos.CategoryDTO;
-import com.ange.ecommerce_api.dtos.CategoryResponse;
-import com.ange.ecommerce_api.dtos.ProductDTO;
-import com.ange.ecommerce_api.dtos.ProductResponse;
+import com.ange.ecommerce_api.dtos.*;
 import com.ange.ecommerce_api.interfaces.Product;
 import com.ange.ecommerce_api.models.CategoryModel;
 import com.ange.ecommerce_api.models.ProductModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -20,14 +18,20 @@ public class ProductService implements Product {
 
     private final ProductRepository productRepository;
 
+    @Autowired
+    private CategoryService categoryService;
+
+    @Autowired
+    private MyMapperDTO myMapper;
+
     public ProductService(ProductRepository productRepo) {
         this.productRepository = productRepo;
     }
 
 
     @Override
-    public List<ProductModel> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductRequestDTO> getAllProducts() {
+        return myMapper.productsListToDTO(productRepository.findAll());
     }
 
     @Override
@@ -35,7 +39,7 @@ public class ProductService implements Product {
         ProductResponse response = new ProductResponse();
         Optional<ProductModel> product = productRepository.findById(id);
         if(product.isPresent()){
-            response.setProduct(product.get());
+           response.setProduct(myMapper.productToDto(product.get()));
         }else{
             response.setErrorMessage("There is no product with id "+id);
         }
@@ -43,7 +47,12 @@ public class ProductService implements Product {
     }
 
     @Override
-    public ProductResponse createProduct(ProductDTO productDTO) {
+    public ProductResponse createProduct(ProductCreateDTO productDTO) {
+        CategoryResponse categoryResponse = categoryService.getCategoryById(productDTO.getCategory_id());
+        if(categoryResponse.getCategory() == null){
+            return new ProductResponse("Category with id "+productDTO.getCategory_id()+" does not exists");
+        }
+
         String productName = productDTO.getName();
         ProductResponse response = new ProductResponse();
 
@@ -54,8 +63,9 @@ public class ProductService implements Product {
         }
 
         ProductModel product = new ProductModel();
+        CategoryRespDTO cat = categoryResponse.getCategory();
         product.setName(productName);
-        product.setCategory(product.getCategory());
+        product.setCategory(new CategoryModel().of(cat.getId(), cat.getName(), cat.getDescription()));
         product.setUnitPrice(productDTO.getUnitPrice());
         product.setDescription(productDTO.getDescription());
         product.setActive(true);
@@ -65,12 +75,12 @@ public class ProductService implements Product {
         product.setLastUpdated(Date.from(Instant.now()));
 
         // save it in db
-        response.setProduct(productRepository.save(product));
+        response.setProduct(myMapper.productToDto(productRepository.save(product)));
         return response;
     }
 
     @Override
-    public ProductResponse updateProduct(Long id, ProductModel productModel) {
+    public ProductResponse updateProduct(Long id, ProductCreateDTO productToUpdate) {
         // check that the category with given id is in DB
         Optional<ProductModel> existingProduct = productRepository.findById(id);
 
@@ -79,18 +89,17 @@ public class ProductService implements Product {
         if(existingProduct.isPresent()){
             ProductModel product = existingProduct.get();
             // update product infos
-            product.setName(productModel.getName());
-            product.setCategory(productModel.getCategory());
-            product.setUnitPrice(productModel.getUnitPrice());
-            product.setDescription(productModel.getDescription());
-            product.setActive(productModel.isActive());
-            product.setDateCreated(productModel.getDateCreated());
-            product.setSku(productModel.getSku());
-            product.setImageUrl(productModel.getImageUrl());
+            product.setName(productToUpdate.getName());
+            //product.setCategory(productToUpdate.getCategory());
+            product.setUnitPrice(productToUpdate.getUnitPrice());
+            product.setDescription(productToUpdate.getDescription());
+            product.setActive(productToUpdate.isActive());
+            product.setSku(productToUpdate.getSku());
+            product.setImageUrl(productToUpdate.getImageUrl());
             product.setLastUpdated(Date.from(Instant.now()));
 
             // save it in db
-            response.setProduct(productRepository.save(product));
+            response.setProduct(myMapper.productToDto(productRepository.save(product)));
             return response;
         }
 

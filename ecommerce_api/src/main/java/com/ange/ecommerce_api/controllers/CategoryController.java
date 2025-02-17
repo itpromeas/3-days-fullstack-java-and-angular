@@ -1,6 +1,7 @@
 package com.ange.ecommerce_api.controllers;
 
-import com.ange.ecommerce_api.dtos.CategoryDTO;
+import com.ange.ecommerce_api.dtos.CategoryRequestDTO;
+import com.ange.ecommerce_api.dtos.CategoryRespDTO;
 import com.ange.ecommerce_api.dtos.CategoryResponse;
 import com.ange.ecommerce_api.models.CategoryModel;
 import com.ange.ecommerce_api.services.CategoryService;
@@ -21,7 +22,7 @@ public class CategoryController {
     }
 
     @GetMapping
-    public List<CategoryModel> getAll()  {
+    public List<CategoryRespDTO> getAll()  {
         return categoryService.getAllCategory();
     }
 
@@ -31,7 +32,7 @@ public class CategoryController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<CategoryResponse> create(@RequestBody CategoryDTO categoryDTO)  {
+    public ResponseEntity<CategoryResponse> create(@RequestBody CategoryRequestDTO categoryDTO)  {
         CategoryResponse response = categoryService.createCategory(categoryDTO);
         if(response.getCategory() == null){
             new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);

@@ -1,6 +1,7 @@
 package com.ange.ecommerce_api.interfaces;
 
-import com.ange.ecommerce_api.dtos.CategoryDTO;
+import com.ange.ecommerce_api.dtos.CategoryRequestDTO;
+import com.ange.ecommerce_api.dtos.CategoryRespDTO;
 import com.ange.ecommerce_api.dtos.CategoryResponse;
 import com.ange.ecommerce_api.models.CategoryModel;
 
@@ -12,7 +13,7 @@ public interface Category {
      * get all categories
      * @return a list of categories
      */
-    List<CategoryModel> getAllCategory();
+    List<CategoryRespDTO> getAllCategory();
 
     /***
      * get a category by id
@@ -25,7 +26,7 @@ public interface Category {
      * create a category
      * @param categoryDTO: category params
      */
-    CategoryResponse createCategory(CategoryDTO categoryDTO);
+    CategoryResponse createCategory(CategoryRequestDTO categoryDTO);
 
     /***
      * update a given category

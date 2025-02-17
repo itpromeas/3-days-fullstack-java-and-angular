@@ -1,6 +1,5 @@
 package com.ange.ecommerce_api.dtos;
 
-import com.ange.ecommerce_api.models.CategoryModel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,11 +7,7 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
-public class ProductDTO {
-    private Long id;
-
-    private CategoryModel category;
-
+public class ProductRequestBaseDTO {
     private String sku; // stock keeping unit
 
     private String name;

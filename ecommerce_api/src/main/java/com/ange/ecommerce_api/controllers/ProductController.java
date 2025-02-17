@@ -1,9 +1,8 @@
 package com.ange.ecommerce_api.controllers;
 
-import com.ange.ecommerce_api.dtos.CategoryResponse;
-import com.ange.ecommerce_api.dtos.ProductDTO;
+import com.ange.ecommerce_api.dtos.ProductCreateDTO;
+import com.ange.ecommerce_api.dtos.ProductRequestDTO;
 import com.ange.ecommerce_api.dtos.ProductResponse;
-import com.ange.ecommerce_api.models.ProductModel;
 import com.ange.ecommerce_api.services.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/product")
+@RequestMapping("/api/products")
 public class ProductController {
 
     private final ProductService productService;
@@ -23,7 +22,7 @@ public class ProductController {
 
 
     @GetMapping
-    public List<ProductModel> getAllProducts()  {
+    public List<ProductRequestDTO> getAll()  {
         return productService.getAllProducts();
     }
 
@@ -33,7 +32,7 @@ public class ProductController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<ProductResponse> create(@RequestBody ProductDTO product)  {
+    public ResponseEntity<ProductResponse> create(@RequestBody ProductCreateDTO product)  {
         ProductResponse response = productService.createProduct(product);
         if(response.getProduct() == null){
             new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -42,7 +41,7 @@ public class ProductController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<ProductResponse> update(@PathVariable Long id, @RequestBody ProductModel product)  {
+    public ResponseEntity<ProductResponse> update(@PathVariable Long id, @RequestBody ProductCreateDTO product)  {
         return ResponseEntity.ok(productService.updateProduct(id, product));
     }
 

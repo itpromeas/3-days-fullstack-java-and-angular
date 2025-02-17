@@ -28,4 +28,16 @@ public class CategoryModel {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
     private Set<ProductModel> products;
+
+    public CategoryModel(){}
+
+    public CategoryModel(Long id, String name, String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+    }
+
+    public CategoryModel of(Long id, String name, String dec){
+        return new CategoryModel(id, name, dec);
+    }
 }
